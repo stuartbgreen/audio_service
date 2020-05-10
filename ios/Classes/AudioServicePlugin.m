@@ -59,7 +59,6 @@ static MPMediaItemArtwork* artwork = nil;
   //   for the client instance and the background instance so that methods
   //   can't be called on the wrong instance.
   if ([@"connect" isEqualToString:call.method]) {
-    UserDefaults.standard.set("TestAudioServiceConnect", forKey: "TestAudioServiceConnect")
     long long msSinceEpoch = (long long)([[NSDate date] timeIntervalSince1970] * 1000.0);
     // Notify client of state on subscribing.
     if (state == nil) {
@@ -85,10 +84,11 @@ static MPMediaItemArtwork* artwork = nil;
 
     result(nil);
   } else if ([@"disconnect" isEqualToString:call.method]) {
-    UserDefaults.standard.set("TestAudioServiceDisconnect", forKey: "TestAudioServiceDisconnect")
     result(nil);
   } else if ([@"start" isEqualToString:call.method]) {
-    UserDefaults.standard.set("TestAudioServiceStart", forKey: "TestAudioServiceStart")
+    NSString *valueToSave = @"testingFromAudioService";
+    [[NSUserDefaults standardUserDefaults] setObject:valueToSave forKey:@"flutter.audioServiceChannelTest"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     if (_running) {
       result(@NO);
       return;
@@ -151,12 +151,10 @@ static MPMediaItemArtwork* artwork = nil;
     [commandCenter.dislikeCommand setEnabled:NO];
     [commandCenter.bookmarkCommand setEnabled:NO];
   } else if ([@"ready" isEqualToString:call.method]) {
-    UserDefaults.standard.set("TestAudioServiceReady", forKey: "TestAudioServiceReady")
     result(@YES);
     startResult(@YES);
     startResult = nil;
   } else if ([@"stopped" isEqualToString:call.method]) {
-    UserDefaults.standard.set("TestAudioServiceStopped", forKey: "TestAudioServiceStopped")
     _running = NO;
     [channel invokeMethod:@"onStopped" arguments:nil];
     [[AVAudioSession sharedInstance] setActive: NO error: nil];
