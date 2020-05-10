@@ -326,6 +326,8 @@ static MPMediaItemArtwork* artwork = nil;
 }
 
 - (void) updateNowPlayingInfo {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:position forKey:@"flutter.nsNumberStored"];
   NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary new];
   if (mediaItem) {
     nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItem[@"title"];
